@@ -67,20 +67,24 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
-
-    public function up(): void
-    {
-        Schema::create('kategoris', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_kategori')->unique();
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('bukus', function (Blueprint $table) {
+        $table->id();
+        $table->string('judul');
+        $table->string('penulis');
+        $table->decimal('harga', 8, 2);
+        $table->integer('stok');
+        $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade');
+        $table->timestamps();
+    });
+}
     public function down(): void
     {
-        Schema::dropIfExists('kategoris');
+        Schema::dropIfExists('bukus');
     }
 };
+
 ```
 
 Jalankan perintah berikut untuk melakukan migrasi:
@@ -96,11 +100,112 @@ Buat controller untuk Kategori dan Buku:
 
 Isi file `KategoriController.php`: 
 
-![image](https://github.com/user-attachments/assets/c9ae0e4c-e06c-4f9b-89b3-163e7c521313)
+```
+<?php
+namespace App\Http\Controllers;
+use App\Models\Kategori;
+use Illuminate\Http\Request;
+class KategoriController extends Controller
+{
+    public function index()
+    {
+        return Kategori::all();
+    }
+    public function store(Request $request)
+    {
+        try {
+            $request->validate(['nama_kategori' => 'required|unique:kategoris']);
+            $kategori = Kategori::create($request->all());
+            return response()->json($kategori, 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+    public function show(string $id){}
+    public function update(Request $request, string $id){}
+    public function destroy(string $id){}
+}
+```
 
-Isi file `BukuiController.php`: 
+Isi file `BukuController.php`: 
 
-![image](https://github.com/user-attachments/assets/3e5ba1da-db45-4a5b-b434-768208254ab3)
+```
+<?php
+namespace App\Http\Controllers;
+use App\Models\Buku;
+use Illuminate\Http\Request;
+class BukuController extends Controller
+{
+    public function index()
+    {
+        $bukus = Buku::all();
+
+        return response()->json($bukus);
+    }
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'judul' => 'required|string|max:255',
+            'penulis' => 'required|string|max:255',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
+            'kategori_id' => 'required|exists:kategoris,id',
+        ]);
+        $buku = Buku::create($validatedData);
+
+        return response()->json([
+            'message' => 'Buku berhasil ditambahkan',
+            'data' => $buku
+        ], 201);
+    }
+    public function show($id)
+    {
+        $buku = Buku::find($id);
+        if (!$buku) {
+            return response()->json([
+                'message' => 'Buku tidak ditemukan'
+            ], 404);
+        }
+        return response()->json($buku);
+    }
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'judul' => 'sometimes|required|string|max:255',
+            'penulis' => 'sometimes|required|string|max:255',
+            'harga' => 'sometimes|required|numeric|min:0',
+            'stok' => 'sometimes|required|integer|min:0',
+            'kategori_id' => 'sometimes|required|exists:kategoris,id',
+        ]);
+        $buku = Buku::find($id);
+        if (!$buku) {
+            return response()->json([
+                'message' => 'Buku tidak ditemukan'
+            ], 404);
+        }
+        $buku->update($validatedData);
+
+        return response()->json([
+            'message' => 'Buku berhasil diupdate',
+            'data' => $buku
+        ]);
+    }
+    public function destroy($id)
+    {
+        $buku = Buku::find($id);
+        if (!$buku) {
+            return response()->json([
+                'message' => 'Buku tidak ditemukan'
+            ], 404);
+        }
+        $buku->delete();
+
+        return response()->json([
+            'message' => 'Buku berhasil dihapus'
+        ]);
+    }
+}
+```
 
 3. Menambahkan Route API 
 Buka file `routes/api.php` dan tambahkan route berikut:
@@ -126,29 +231,42 @@ A. GET Semua Kategori
  URL: http://localhost:8000/api/kategoris 
  Klik Send untuk melihat hasil. 
 
-![Screenshot 2024-10-20 135453](https://github.com/user-attachments/assets/9615bc20-baa7-4341-a886-631a3cb3e946)
+![Screenshot 2024-10-20 135453](https://github.com/user-attachments/assets/54ec6d15-c566-41b2-aa6a-f8df5810941b)
 
 B. POST Tambah Kategori Baru 
  Method: POST 
  URL: http://localhost:8000/api/kategoris 
  Body :
+```
+{
+    "nama_kategori": "Novel"
+}
+```
 
-
-![Screenshot 2024-10-20 135736](https://github.com/user-attachments/assets/1aab6573-29d6-4556-8bb9-a0d583410e0d)
+![Screenshot 2024-10-20 135736](https://github.com/user-attachments/assets/439158b5-cb59-4b7f-b014-928a26283ec8)
 
 C. GET Semua Buku 
  Method: GET 
  URL: http://localhost:8000/api/bukus 
  Klik Send. 
 
-![Screenshot 2024-10-20 135835](https://github.com/user-attachments/assets/c2f2ad51-2756-451e-b55d-8f8603638a1c)
+![Screenshot 2024-10-20 135835](https://github.com/user-attachments/assets/2acff550-0f37-4ccb-a8d9-fa8128ec2b06)
 
 D. POST Tambah Buku Baru 
  Method: POST 
  URL: http://localhost:8000/api/bukus 
  Body: 
+```
+{
+    "judul": "Laskar Pelangi",
+    "penulis": "Andrea Hirata",
+    "harga": 85000,
+    "stok": 20,
+    "kategori_id": 1
+}
+```
 
-![Screenshot 2024-10-20 140222](https://github.com/user-attachments/assets/1f9ab90a-ce1e-432a-9d48-9f48c4cc644b)
+![Screenshot 2024-10-20 140222](https://github.com/user-attachments/assets/db0849b4-b28e-4f6e-ace0-798218ad6bee)
 
 E. 
 GET Buku Berdasarkan ID 
@@ -156,25 +274,28 @@ GET Buku Berdasarkan ID
  URL: http://localhost:8000/api/bukus/1 
  Klik Send.
 
-![Screenshot 2024-10-20 140240](https://github.com/user-attachments/assets/111afbb5-909c-4a91-9a6d-65fb7a1a1147)
+![Screenshot 2024-10-20 140240](https://github.com/user-attachments/assets/74440022-e505-4932-86e7-1d7a8d4685e9)
 
 F. 
 PUT Update Data Buku 
  Method: PUT 
  URL: http://localhost:8000/api/bukus/1 
  BODY 
+```
+{
+    "judul": "Laskar Pelangi- Edisi Spesial",
+    "penulis": "Andrea Hirata",
+    "harga": 85000,
+    "stok": 20,
+    "kategori_id": 1
+}
+```
 
-![Screenshot 2024-10-20 140335](https://github.com/user-attachments/assets/917b4979-46c4-4b3a-a253-e26ecc2828c3)
+![Screenshot 2024-10-20 140335](https://github.com/user-attachments/assets/d454b372-ae2c-42b8-91b6-becf4e3898c3)
 
 G. DELETE Hapus Buku 
  Method: DELETE 
  URL: http://localhost:8000/api/bukus/1 
  Klik Send.
 
-![Screenshot 2024-10-20 140353](https://github.com/user-attachments/assets/23616249-f009-4364-88fe-8786793e67af)
-
-
-
-
-
-
+![Screenshot 2024-10-20 140353](https://github.com/user-attachments/assets/e1ad3c02-7379-42b0-ae43-27a5c91afab0)
