@@ -1,66 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Nama : Alfha Risqi Wicaksono NIM : 362358302145
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Tugas Mahasiswa 
+1. Tambahkan Validasi: 
+o Nama buku tidak boleh kosong. 
+o Harga minimal Rp 1.000.
 
-## About Laravel
+![Screenshot 2024-10-20 150217](https://github.com/user-attachments/assets/8ce557c9-655d-4fcb-b3a3-0d4982caa763)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+3. Rancang Endpoint Baru: 
+Buatlah satu endpoint tambahan untuk sistem toko buku, misalnya, endpoint untuk 
+mencari buku berdasarkan kategori atau judul. Tantangan: Apa pertimbangan yang 
+harus Anda buat saat merancang endpoint ini? Pertimbangkan aspek performa, 
+skalabilitas, dan pengalaman pengguna.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Untuk membuat endpoint pencarian buku berdasarkan judul dalam sistem API toko buku, Saya bisa menambahkan endpoint ini ke dalam controller Anda di Laravel. 
+Menambahkan fungsi di controller BookController:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
+public function search(Request $request)
+    {
+        $query = Buku::query();
 
-## Learning Laravel
+        // Filter berdasarkan judul
+        if ($request->has('judul')) {
+            $query->where('judul', 'like', '%' . $request->judul . '%');
+        }
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+        // Filter berdasarkan kategori
+        if ($request->has('kategori_id')) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+        // Ambil hasil pencarian
+        $bukus = $query->get();
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+        return response()->json($bukus);
+    }
+```
 
-## Laravel Sponsors
+Menambahkan route baru untuk endpoint ini di routes/api.php:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+Route::get('bukus/search', [BukuController::class, 'search']);
+```
 
-### Premium Partners
+Endpoint menerima parameter query melalui URL untuk mencari buku berdasarkan judulnya
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+![Screenshot 2024-10-20 150331](https://github.com/user-attachments/assets/2e8e85f7-35a2-4488-a0ba-d0cba22f61ba)
 
-## Contributing
+5. Uji API Secara Publik: 
+o Gunakan ngrok atau sejenisnya untuk membuka API ke internet.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+hubungkan ngrok ke api
 
-## Code of Conduct
+![Screenshot 2024-10-20 162748](https://github.com/user-attachments/assets/9d7e677d-ea83-4e85-868c-4f496214f1b7)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+buka url dari ngrok di website
 
-## Security Vulnerabilities
+![Screenshot 2024-10-20 160323](https://github.com/user-attachments/assets/13eca435-e8c7-448b-9695-41e2d78f4ee7)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
