@@ -1,66 +1,122 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# sampah
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Praktikum Interoperabilitas: Membuat API Toko Buku dengan Laravel 11 dan Testing Menggunakan Postman 
 
-## About Laravel
+Persiapan 
+1. Instalasi Laravel 11: 
+Pastikan sudah terinstal PHP, Composer, dan MySQL. 
+Instal Laravel:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Screenshot 2024-10-20 131129](https://github.com/user-attachments/assets/e58bd4c7-651c-4860-aa76-0e0ad111e629)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Konfigurasi Database: 
+Buat database MySQL baru bernama 'tokobuku_db'. 
+Sesuaikan file .env dengan informasi berikut:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+![Screenshot 2024-10-20 111554](https://github.com/user-attachments/assets/27bee590-0870-4314-a964-fb14587948a8)
 
-## Learning Laravel
+Migrasi Awal: 
+Jalankan perintah berikut untuk membuat tabel default:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+![Screenshot 2024-10-20 111657](https://github.com/user-attachments/assets/28e3a4a9-bac1-4013-b6a4-47b09a05495d)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Membuat API CRUD untuk Sistem Toko Buku 
+API ini akan mengelola data buku dan kategori dengan beberapa endpoint: 
+1. Kategori: Menambahkan dan menampilkan kategori buku. 
+2. Buku: Mengelola informasi buku (judul, penulis, harga, stok, dan kategori).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Membuat Migration dan Model 
+Buat migration dan model untuk Kategori dan Buku:
 
-## Laravel Sponsors
+![Screenshot 2024-10-20 140859](https://github.com/user-attachments/assets/d5d60ef4-737f-4863-8a9c-208c43e39e2f)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+![Screenshot 2024-10-20 140911](https://github.com/user-attachments/assets/e1e29391-c19c-4e5a-befe-d944fddd5884)
 
-### Premium Partners
+Edit file migration `create_kategoris_table.php`:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+![Screenshot 2024-10-20 141028](https://github.com/user-attachments/assets/d779cbee-3428-4a12-9e62-a295c4805776)
 
-## Contributing
+Edit file migration `create_bukus_table.php`:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+![image](https://github.com/user-attachments/assets/56ba3204-b044-41eb-ba69-03d37a1aa1e4)
 
-## Code of Conduct
+Jalankan perintah berikut untuk melakukan migrasi:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+![Screenshot 2024-10-20 141241](https://github.com/user-attachments/assets/f3016591-34cc-4c79-9f2b-defa8b5f6bb6)
 
-## Security Vulnerabilities
+2. Membuat Controller API untuk Kategori dan Buku 
+Buat controller untuk Kategori dan Buku:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+![image](https://github.com/user-attachments/assets/c36c6219-9b82-49c3-b0b1-2d000172c84f)
 
-## License
+Isi file `KategoriController.php`: 
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+Isi file `BukuiController.php`: 
+
+
+3. Menambahkan Route API 
+Buka file `routes/api.php` dan tambahkan route berikut:
+
+
+IV. Testing API dengan Postman 
+1. Jalankan server Laravel
+
+2. Testing endpoint menggunakan Postman: 
+A. GET Semua Kategori 
+ Method: GET 
+ URL: http://localhost:8000/api/kategoris 
+ Klik Send untuk melihat hasil. 
+
+![Screenshot 2024-10-20 135453](https://github.com/user-attachments/assets/9615bc20-baa7-4341-a886-631a3cb3e946)
+
+B. POST Tambah Kategori Baru 
+ Method: POST 
+ URL: http://localhost:8000/api/kategoris 
+ Body :
+
+
+![Screenshot 2024-10-20 135736](https://github.com/user-attachments/assets/1aab6573-29d6-4556-8bb9-a0d583410e0d)
+
+C. GET Semua Buku 
+ Method: GET 
+ URL: http://localhost:8000/api/bukus 
+ Klik Send. 
+
+![Screenshot 2024-10-20 135835](https://github.com/user-attachments/assets/c2f2ad51-2756-451e-b55d-8f8603638a1c)
+
+D. POST Tambah Buku Baru 
+ Method: POST 
+ URL: http://localhost:8000/api/bukus 
+ Body: 
+
+![Screenshot 2024-10-20 140222](https://github.com/user-attachments/assets/1f9ab90a-ce1e-432a-9d48-9f48c4cc644b)
+
+E. 
+GET Buku Berdasarkan ID 
+ Method: GET 
+ URL: http://localhost:8000/api/bukus/1 
+ Klik Send.
+
+![Screenshot 2024-10-20 140240](https://github.com/user-attachments/assets/111afbb5-909c-4a91-9a6d-65fb7a1a1147)
+
+F. 
+PUT Update Data Buku 
+ Method: PUT 
+ URL: http://localhost:8000/api/bukus/1 
+ BODY 
+
+![Screenshot 2024-10-20 140335](https://github.com/user-attachments/assets/917b4979-46c4-4b3a-a253-e26ecc2828c3)
+
+G. DELETE Hapus Buku 
+ Method: DELETE 
+ URL: http://localhost:8000/api/bukus/1 
+ Klik Send.
+
+![Screenshot 2024-10-20 140353](https://github.com/user-attachments/assets/23616249-f009-4364-88fe-8786793e67af)
+
+
+
+
+
+
