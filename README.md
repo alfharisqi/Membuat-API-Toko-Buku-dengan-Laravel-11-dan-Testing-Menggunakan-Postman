@@ -1,5 +1,4 @@
-# sampah
-
+Nama: Alfha Risqi Wicaksono NIM :362358302145
 Praktikum Interoperabilitas: Membuat API Toko Buku dengan Laravel 11 dan Testing Menggunakan Postman 
 
 Persiapan 
