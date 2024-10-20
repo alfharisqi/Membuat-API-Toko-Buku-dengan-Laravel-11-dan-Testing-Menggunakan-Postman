@@ -34,11 +34,54 @@ Buat migration dan model untuk Kategori dan Buku:
 
 Edit file migration `create_kategoris_table.php`:
 
-![Screenshot 2024-10-20 112117](https://github.com/user-attachments/assets/c609059d-e82d-46b4-910a-24564c339bc9)
+```
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+return new class extends Migration
+{
+
+    public function up(): void
+    {
+        Schema::create('kategoris', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_kategori')->unique();
+            $table->timestamps();
+        });
+    }
+    public function down(): void
+    {
+        Schema::dropIfExists('kategoris');
+    }
+};
+
+```
 
 Edit file migration `create_bukus_table.php`:
 
-![Screenshot 2024-10-20 112438](https://github.com/user-attachments/assets/9cbbb71b-88aa-4e39-b91e-104bfc53180c)
+```
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+return new class extends Migration
+{
+
+    public function up(): void
+    {
+        Schema::create('kategoris', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_kategori')->unique();
+            $table->timestamps();
+        });
+    }
+    public function down(): void
+    {
+        Schema::dropIfExists('kategoris');
+    }
+};
+```
 
 Jalankan perintah berikut untuk melakukan migrasi:
 
